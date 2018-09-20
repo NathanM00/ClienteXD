@@ -1,6 +1,8 @@
 package com.example.a1006106113.myapplication;
 
 import android.util.Log;
+import android.webkit.ClientCertRequest;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,22 +12,48 @@ import java.net.Socket;
 
 public class Client extends Thread {
 
+    Socket ss;
+    Receptor r;
+
+    MainActivity activity;
+
+    public Client(MainActivity activity){
+        this.activity = activity;
+    }
+
     @Override
     public void run() {
         try {
-            Socket ss = new Socket("10.0.2.2",5000);
-
-            InputStream is =ss.getInputStream();
-            OutputStream os = ss.getOutputStream();
-
-            PrintWriter out = new PrintWriter( new OutputStreamWriter(os)  );
-            out.println("Prendalo");
-            out.flush();
-
+             ss = new Socket("172.30.160.16",5000);
+             r = new Receptor(ss);
+             r.setObserver(activity);
+             r.start();
             Log.e("DEBUG","SI NOS CONECTAMOS MANIN");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void enviar(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Este codigo se va a ejecutar en paralelo
+                try {
+                    OutputStream os = ss.getOutputStream();
+                    PrintWriter out = new PrintWriter( new OutputStreamWriter(os)  );
+                    out.println("Prendalo");
+                    out.flush();
+
+                } catch (IOException e) {
+
+                }
+
+            }
+        }).start();
+
     }
 }
 
@@ -50,6 +78,8 @@ public class Main {
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Receptor extends Thread{
@@ -65,9 +95,15 @@ public class Receptor extends Thread{
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader( new InputStreamReader(is) );
 
+			PrintWriter out = new PrintWriter ( new OutputStreamWriter(  socket.getOutputStream()  )  );
+
 			while(true){
 				String line = reader.readLine();
 				System.out.println(line);
+
+				out.println("Prendalo!!");
+			    out.flush();
+
 			}
 
 		} catch (IOException e) {
@@ -79,7 +115,6 @@ public class Receptor extends Thread{
 	}
 
 }
-
 /*
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -100,12 +135,9 @@ public class Servidor extends Thread{
 
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-
 }
 
  */
