@@ -28,3 +28,84 @@ public class Client extends Thread {
         }
     }
 }
+
+/*
+import java.io.IOException;
+        import java.net.InetAddress;
+        import java.net.ServerSocket;
+        import java.net.UnknownHostException;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Servidor ser = new Servidor();
+        ser.start();
+        System.out.println("Bienvenido servidor!");
+
+    }
+}
+*/
+
+/*import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
+public class Receptor extends Thread{
+	Socket socket;
+
+	public Receptor(Socket socket) {
+		this.socket = socket;
+	}
+
+	@Override
+	public void run() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader( new InputStreamReader(is) );
+
+			while(true){
+				String line = reader.readLine();
+				System.out.println(line);
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Siempre quiero que este en funcionamiento
+
+	}
+
+}
+
+/*
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Servidor extends Thread{
+
+	@Override
+	public void run() {
+		try {
+			ServerSocket server = new ServerSocket(5000);
+			System.out.println("Esperando conexion");
+			Socket s = server.accept();
+			System.out.println("Conexion aceptada");
+
+			Receptor receptor = new Receptor(s);
+			receptor.start();
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+}
+
+ */
